@@ -1,0 +1,34 @@
+--- a/gfx/skia/skia/src/core/SkBitmapProcState.cpp
++++ b/gfx/skia/skia/src/core/SkBitmapProcState.cpp
+@@ -295,17 +295,17 @@ bool SkBitmapProcState::chooseScanlinePr
+                 index |= 40;
+                 fPaintPMColor = SkPreMultiplyColor(fPaintColor);
+                 break;
+             default:
+                 // TODO(dominikg): Should we ever get here? SkASSERT(false) instead?
+                 return false;
+         }
+ 
+-#if !defined(SK_ARM_HAS_NEON)
++#if !defined(SK_ARM_HAS_NEON) || defined(SK_ARM_HAS_OPTIONAL_NEON)
+         static const SampleProc32 gSkBitmapProcStateSample32[] = {
+             S32_opaque_D32_nofilter_DXDY,
+             S32_alpha_D32_nofilter_DXDY,
+             S32_opaque_D32_nofilter_DX,
+             S32_alpha_D32_nofilter_DX,
+             S32_opaque_D32_filter_DXDY,
+             S32_alpha_D32_filter_DXDY,
+             S32_opaque_D32_filter_DX,
+
+--- a/gfx/skia/skia/src/core/SkBitmapProcState_matrixProcs.cpp
++++ b/gfx/skia/skia/src/core/SkBitmapProcState_matrixProcs.cpp
+@@ -56,7 +56,7 @@
+ #endif // defined(SK_ARM_HAS_NEON)
+ 
+ // Compile non-neon code path if needed
+-#if !defined(SK_ARM_HAS_NEON)
++#if !defined(SK_ARM_HAS_NEON) || defined(SK_ARM_HAS_OPTIONAL_NEON)
+ #define MAKENAME(suffix)         ClampX_ClampY ## suffix
+ #define TILEX_PROCF(fx, max)     SkClampMax((fx) >> 16, max)
+ #define TILEY_PROCF(fy, max)     SkClampMax((fy) >> 16, max)
+

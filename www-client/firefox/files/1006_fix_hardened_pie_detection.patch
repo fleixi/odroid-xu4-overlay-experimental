@@ -1,0 +1,26 @@
+From: Jory A. Pratt <anarchy@gentoo.org>
+
+CFLAGS must contain -fPIC when checking the linker
+
+https://bugs.gentoo.org/show_bug.cgi?id=607350
+
+--- a/build/autoconf/compiler-opts.m4
++++ b/build/autoconf/compiler-opts.m4
+@@ -266,6 +266,8 @@
+ 
+ if test "$GNU_CC$CLANG_CC" -a -n "$MOZ_PIE"; then
+     AC_MSG_CHECKING([for PIE support])
++    _SAVE_CFLAGS=$CFLAGS
++    CFLAGS="$CFLAGS -fPIC"
+     _SAVE_LDFLAGS=$LDFLAGS
+     LDFLAGS="$LDFLAGS -pie"
+     AC_TRY_LINK(,,AC_MSG_RESULT([yes])
+@@ -273,6 +275,7 @@
+                   AC_MSG_RESULT([no])
+                   AC_MSG_ERROR([--enable-pie requires PIE support from the linker.]))
+     LDFLAGS=$_SAVE_LDFLAGS
++    CFLAGS=$_SAVE_CFLAGS
+ fi
+ 
+ AC_SUBST(MOZ_PROGRAM_LDFLAGS)
+
